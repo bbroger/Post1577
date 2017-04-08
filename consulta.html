@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de clientes</title>
+
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/icon.css">
+
+    <script type="text/javascript" src="js/lib/angular.min.js"></script>
+    <script type="text/javascript" src="js/lib/paging.min.js"></script>
+
+    <script type="text/javascript" src="js/app/app.js"></script>
+    <script type="text/javascript" src="js/app/controllers/consulta.js"></script>
+
+</head>
+<body>
+
+<!-- Definindo aplicativo que será utilizado -->
+<div class="container" ng-app="appModule">
+
+    <h3>Consulta de clientes</h3>
+
+    <!-- Definindo controller que será utilizado e fazendo pesquisa inicial -->
+    <div ng-controller="consultaController as ctrl" ng-init="ctrl.consultar()">
+
+        <!-- Formulário para pesquisar com os filtros -->
+        <form ng-submit="ctrl.consultar()">
+
+            <button class="btn" type="submit" name="action">Pesquisar
+                <i class="material-icons left">search</i>
+            </button>
+
+            <div class="row">
+
+                <div class="input-field col s4">
+                    <input placeholder="Nome" type="text" ng-model="ctrl.filtros.nome">
+                </div>
+                <div class="input-field col s4">
+                    <input placeholder="Telefone" type="text" ng-model="ctrl.filtros.telefone">
+                </div>
+                <div class="input-field col s4">
+                    <input placeholder="Email" type="text" ng-model="ctrl.filtros.email">
+                </div>
+
+            </div>
+
+        </form>
+
+        <!-- Se barra de progresso habilitada, exibe ela -->
+        <div class="progress" ng-show="ctrl.consultando">
+            <div class="indeterminate"></div>
+        </div>
+
+        <!-- Se barra de progresso desabilitada, exibe a tabela com os registros -->
+        <div ng-show="!ctrl.consultando">
+
+            <table class="bordered striped">
+
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <!-- Construindo linhas e colunas de acordo com a lista de clientes -->
+                <tr ng-repeat="cliente in ctrl.clientes">
+                    <td ng-bind="cliente.nome"></td>
+                    <td ng-bind="cliente.telefone"></td>
+                    <td ng-bind="cliente.email"></td>
+                </tr>
+
+                <!-- Se não houver nenhum cliente na lista -->
+                <tr ng-if="ctrl.clientes.length == 0">
+                    <td colspan="3" class="center-align">Nenhum cliente encontrado</td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+            <!-- Definindo informações de paginação do componente -->
+            <paging class="center-align" page="ctrl.paginacao.pagina_atual"
+                    page-size="ctrl.paginacao.registros_por_pagina" total="ctrl.paginacao.total_registros"
+                    paging-action="ctrl.consultar(page)" show-prev-next="true" ></paging>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
